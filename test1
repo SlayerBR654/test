@@ -1,23 +1,31 @@
--- Script Tool Giver para Natural Disaster Survival (Roblox)
--- Certifique-se de que este script esteja no seu jogo como um objeto de serviço (por exemplo, um objeto de script).
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
-local ToolGiver = {} -- Tabela para armazenar os IDs dos itens e suas funções de entrega
-
--- Adicione os IDs dos itens e suas funções de entrega aqui
-ToolGiver[125013769] = function(player) -- Exemplo: ID do item é 123456
-    local item = Instance.new("Tool") -- Crie uma nova ferramenta
-    item.Name = "Meu Item" -- Nome do item
-    item.Parent = player.Backpack -- Coloque o item na mochila do jogador
+-- Função para calcular a distância entre dois pontos no espaço 3D
+local function calculateDistance(point1, point2)
+    return (point1 - point2).Magnitude
 end
 
--- Evento para quando o jogador insere o ID do item
-game.Players.PlayerAdded:Connect(function(player)
-    player.Chatted:Connect(function(message)
-        local itemID = tonumber(message) -- Converta a mensagem do jogador para um número
-        if ToolGiver[itemID] then
-            ToolGiveritemID -- Entregue o item correspondente
-        else
-            player:Kick("Item não encontrado ou ID inválido.") -- Mensagem de erro se o ID não for válido
+-- Função para atualizar as informações do ESP
+local function updateESP()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            local character = player.Character
+            if character then
+                local humanoid = character:FindFirstChild("Humanoid")
+                if humanoid then
+                    local distance = calculateDistance(LocalPlayer.Character.HumanoidRootPart.Position, humanoid.Parent.HumanoidRootPart.Position)
+                    local health = humanoid.Health
+                    print(player.Name .. " - Distância: " .. distance .. " studs, Vida: " .. health)
+                    -- Você pode exibir essas informações como preferir (por exemplo, criar GUIs ou imprimir no console)
+                end
+            end
         end
-    end)
-end)
+    end
+end
+
+-- Atualize as informações do ESP a cada segundo
+while true do
+    wait(1)
+    updateESP()
+end
