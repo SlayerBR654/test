@@ -1,70 +1,23 @@
-local PabloLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/BatuKvi123/PabloLibV3/main/PabloLibV3"))()
-local window = PabloLib:Create(
-"Item Giver 0.1", -- Name here.
-"Enabled", -- If you want draggable set here to "Enabled" if you dont want set to "Disabled".
-"p" -- You can put any keybind here to open close.
-)
+-- Script Tool Giver para Natural Disaster Survival (Roblox)
+-- Certifique-se de que este script esteja no seu jogo como um objeto de serviço (por exemplo, um objeto de script).
 
----Tabs---
+local ToolGiver = {} -- Tabela para armazenar os IDs dos itens e suas funções de entrega
 
-local tab1 = window:CreateTab("Item Giver")
-
----Buttons---
-
-tab1:CreateButton("Button", function()
--- Natural Disaster Survival Tool Giver Script
--- By Copilot
-
--- Define a função para dar o item com base no ID
-local function giveItem(player, itemId)
-    local item = Instance.new("Tool")
-    item.Name = "CustomTool" -- Nome do item personalizado
-    item.RequiresHandle = true
-    item.Parent = player.Backpack
-    item.ToolTip = "Custom Tool" -- Dica do item personalizado
-    item.TextureId = "rbxassetid://" .. itemId -- ID do item
+-- Adicione os IDs dos itens e suas funções de entrega aqui
+ToolGiver[125013769] = function(player) -- Exemplo: ID do item é 123456
+    local item = Instance.new("Tool") -- Crie uma nova ferramenta
+    item.Name = "Meu Item" -- Nome do item
+    item.Parent = player.Backpack -- Coloque o item na mochila do jogador
 end
 
--- Crie um menu simples para o jogador inserir o ID do item
-local player = game.Players.LocalPlayer
-local gui = Instance.new("ScreenGui")
-gui.Parent = player.PlayerGui
-
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 200, 0, 100)
-frame.Position = UDim2.new(0.5, -100, 0.5, -50)
-frame.BackgroundColor3 = Color3.new(0, 0, 0)
-frame.Parent = gui
-
-local textBox = Instance.new("TextBox")
-textBox.Size = UDim2.new(0, 180, 0, 30)
-textBox.Position = UDim2.new(0.5, -90, 0, 10)
-textBox.Parent = frame
-
-local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 180, 0, 30)
-button.Position = UDim2.new(0.5, -90, 0, 50)
-button.Text = "Give Item"
-button.Parent = frame
-
--- Evento de clique do botão
-button.MouseButton1Click:Connect(function()
-    local itemId = tonumber(textBox.Text)
-    if itemId then
-        giveItem(player, itemId)
-    else
-        print("Insira um ID válido.")
-    end
-end)
-
--- Adicione um botão para minimizar a janela
-local minimizeButton = Instance.new("TextButton")
-minimizeButton.Size = UDim2.new(0, 20, 0, 20)
-minimizeButton.Position = UDim2.new(1, -20, 0, 0)
-minimizeButton.Text = "-"
-minimizeButton.Parent = frame
-
--- Evento de clique para minimizar
-minimizeButton.MouseButton1Click:Connect(function()
-    frame.Visible = not frame.Visible
+-- Evento para quando o jogador insere o ID do item
+game.Players.PlayerAdded:Connect(function(player)
+    player.Chatted:Connect(function(message)
+        local itemID = tonumber(message) -- Converta a mensagem do jogador para um número
+        if ToolGiver[itemID] then
+            ToolGiveritemID -- Entregue o item correspondente
+        else
+            player:Kick("Item não encontrado ou ID inválido.") -- Mensagem de erro se o ID não for válido
+        end
+    end)
 end)
